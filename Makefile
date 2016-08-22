@@ -12,9 +12,9 @@ endif
 CFLAGS = -ffunction-sections -O3
 LDFLAGS = -Wl,--gc-sections
 
-all:libmincrypt.a mkbootimg$(EXE) unpackbootimg$(EXE)
+all:libmincrypt.a mkbootimg$(EXE) unpackbootimg$(EXE) mkbootfs$(EXE)
 
-static:libmincrypt.a mkbootimg-static$(EXE) unpackbootimg-static$(EXE)
+static:libmincrypt.a mkbootimg-static$(EXE) unpackbootimg-static$(EXE) mkbootfs-static$(EXE)
 
 libmincrypt.a:
 	make -C libmincrypt
@@ -37,8 +37,11 @@ unpackbootimg-static$(EXE):unpackbootimg.o
 unpackbootimg.o:unpackbootimg.c
 	$(CROSS_COMPILE)$(CC) -o $@ $(CFLAGS) -c $< -Werror
 
+mkbootfs.o:mkbootfs.c
+	$(CROSS_COMPILE)$(CC) -o $@ $(CFLAGS) -c $< -Icm_android_system_core_include -Werror
+
 clean:
-	$(RM) mkbootimg mkbootimg-static mkbootimg.o unpackbootimg unpackbootimg-static unpackbootimg.o mkbootimg.exe mkbootimg-static.exe unpackbootimg.exe unpackbootimg-static.exe
+	$(RM) mkbootimg mkbootimg-static mkbootimg.o unpackbootimg unpackbootimg-static unpackbootimg.o mkbootimg.exe mkbootimg-static.exe unpackbootimg.exe unpackbootimg-static.exe mkbootfs mkbootfs.o mkbootfs.exe
 	$(RM) libmincrypt.a Makefile.~
 	make -C libmincrypt clean
 
